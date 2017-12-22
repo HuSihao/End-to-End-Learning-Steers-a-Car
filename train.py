@@ -8,11 +8,10 @@ import os
 from model import CNN
 from load_data import LoadTrainBatch,LoadValBatch
 
-LOGDIR = '.\\save'
-CKPT_FILE = '.\\save\\model.ckpt'
-TRAIN_TENSORBOARD_LOG = '.\\train_logs'
-VAL_TENSORBOARD_LOG = '.\\val_logs'
-
+LOGDIR = './save'
+CKPT_FILE = './save/model.ckpt'
+TRAIN_TENSORBOARD_LOG = './train_logs'
+VAL_TENSORBOARD_LOG = './val_logs'
 
 batch_size = 50
 max_iter_num = 10000
@@ -26,9 +25,12 @@ val_summary = tf.summary.scalar("val_loss",cnn.loss)
 train_summary_writer = tf.summary.FileWriter(TRAIN_TENSORBOARD_LOG, graph=tf.get_default_graph())
 val_summary_writer = tf.summary.FileWriter(VAL_TENSORBOARD_LOG, graph=tf.get_default_graph())
 
+# gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
+# with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
-with tf.Session(config = config) as sess:
+
+with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
     for step in range(max_iter_num):
         [x_train, y_train] = LoadTrainBatch(batch_size)
